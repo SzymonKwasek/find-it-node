@@ -1,0 +1,66 @@
+<% include ../partials/headerIndex %>
+
+<% include ../partials/backsliderjbtr %>
+
+
+
+<div class='container'>
+    <header class="jumbotron">
+        <div class="container">
+                <h1>Welcome To <span id="logo"><em>find Em!</em></span></h1>
+                <p>Check places found by others, or let them find one for you !</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="/campgrounds/new" role="button">Find a place!</a>
+            </p>
+            <p>
+                <form action="/campgrounds" method="GET" class="form-inline">
+                    <div class="form-group" style="padding-top: 10px;">
+                        <input type="text" name="search" placeholder="Search.." class="form-control">
+                        <!--<input type="submit" value="Search" class="btn btn-primary btn-sm" style="margin-left:5px;">-->
+                        <button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search..</button>
+                    </div>
+                </form>
+            </p>
+        </div>
+    </header>
+
+
+  
+    <div class="grid">
+        <div class="grid-sizer"></div>
+        <div class="gutter-sizer"></div>
+        <% campgrounds.reverse() %>
+        <% campgrounds.forEach(function(item){ %>
+        <div class="grid-item indexpage" >
+            <a  href="campgrounds/<%=item._id%>" id="info"><img id="indeximg" src= "<%=item.image%>"></a>
+            <div class="box-text">
+                <a href="campgrounds/<%=item._id%>"><h1 id="title-name"><%=item.name%></h1></a>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+
+
+</div>
+<script>
+// external js: masonry.pkgd.js, imagesloaded.pkgd.js
+
+// init Masonry
+var grid = document.querySelector('.grid');
+
+var msnry = new Masonry( grid, {
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-sizer',
+  percentPosition: true,
+  gutter: '.gutter-sizer'
+});
+
+imagesLoaded( grid ).on( 'progress', function() {
+  // layout Masonry after each image loads
+  msnry.layout();
+});
+
+
+</script>
+
+<% include ../partials/footer %>

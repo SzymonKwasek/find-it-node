@@ -1,0 +1,174 @@
+<% include ../partials/header %>
+
+<% include ../partials/backslider %>
+
+<div class="container wrapper4">
+        <div class="col-md-1 col-s-0">
+        </div>
+        <div class="col-md-4 col-s-12">
+          <h1 style="color: white; text-shadow: 2px 4px 8px rgba(0,0,0,0.8)">Add a new campground !</h1>
+            <form action='/campgrounds' method='POST'>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Name" name='name'>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Link with the image here!" name='image'>
+                </div>
+                <div  class= "form-group" id="pac-container">
+                    <input class= "form-control" id="pac-input" type="text" placeholder="Enter a location" name='location'>
+                </div>
+                <!--<div>-->
+                <!--  <div id="type-selector" class="pac-controls">-->
+                <!--    <input type="radio" name="type" id="changetype-all" checked="checked">-->
+                <!--    <label for="changetype-all">All</label>-->
+          
+                <!--    <input type="radio" name="type" id="changetype-establishment">-->
+                <!--    <label for="changetype-establishment">Establishments</label>-->
+          
+                <!--    <input type="radio" name="type" id="changetype-address">-->
+                <!--    <label for="changetype-address">Addresses</label>-->
+          
+                <!--    <input type="radio" name="type" id="changetype-geocode">-->
+                <!--    <label for="changetype-geocode">Geocodes</label>-->
+                <!--  </div>-->
+                <!--</div>-->
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="latitude(optional)" name='lat'>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="langitude(optional)" name='lng'>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control noresize" placeholder="Description..." rows=10 name='description'></textarea> 
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                 </div>
+                <div class="form-group">
+                     <a class="btn btn-s btn-primary text-center" href="/campgrounds" type="button">Go Back!</a>
+                </div>
+             </form>
+         
+        </div>
+      <div class="col-md-7 col-s-12">
+        <div class="mapa" id="map"></div>
+        <div id="infowindow-content">
+                <img src="" width="16" height="16" id="place-icon">
+                <span id="place-name"  class="title"></span><br>
+                <span id="place-address"></span>
+        </div> 
+      </div>
+
+    
+</div>
+
+<script>
+      
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -33.8688, lng: 151.2195},
+          zoom: 13
+        });
+        var card = document.getElementById('pac-card');
+        var input = document.getElementById('pac-input');
+        var types = document.getElementById('type-selector');
+        var strictBounds = document.getElementById('strict-bounds-selector');
+
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.
+        autocomplete.bindTo('bounds', map);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+
+        autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+
+          infowindowContent.children['place-icon'].src = place.icon;
+          infowindowContent.children['place-name'].textContent = place.name;
+          infowindowContent.children['place-address'].textContent = address;
+          infowindow.open(map, marker);
+        });
+
+        // Sets a listener on a radio button to change the filter type on Places
+        // Autocomplete.
+        // function setupClickListener(id, types) {
+        //   var radioButton = document.getElementById(id);
+        //   radioButton.addEventListener('click', function() {
+        //     autocomplete.setTypes(types);
+        //   });
+        // }
+
+        // setupClickListener('changetype-all', []);
+        // setupClickListener('changetype-address', ['address']);
+        // setupClickListener('changetype-establishment', ['establishment']);
+        // setupClickListener('changetype-geocode', ['geocode']);
+
+        // document.getElementById('use-strict-bounds')
+        //     .addEventListener('click', function() {
+        //       console.log('Checkbox clicked! New state=' + this.checked);
+        //       autocomplete.setOptions({strictBounds: this.checked});
+        //     });
+      }
+
+  function checkGeocode(){
+      var addr = document.getElementById("pac-input");
+      // Get geocoder instance
+      var geocoder = new google.maps.Geocoder();
+      
+      // Geocode the address
+      geocoder.geocode({'address': addr.value}, function(results, status){
+      if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
+      alert('looks good')
+      // set it to the correct, formatted address if it's valid
+      addr.value = results[0].formatted_address;;
+      
+      // show an error if it's not
+      }else alert("Invalid address");
+      });
+      };
+
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeKMA0ejVQuoPtFiwH9r90uAHX9klASq0&libraries=places&callback=initMap"></script>
+<!--<script script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeKMA0ejVQuoPtFiwH9r90uAHX9klASq0&libraries=places"></script>-->
+
+<% include ../partials/footer %>

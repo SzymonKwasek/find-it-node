@@ -1,0 +1,47 @@
+<% include ./partials/headerIndex %>
+
+<h1>Welcome to <%=user.username%> userpage !</h1>
+
+
+
+
+<div class="container">
+    <h2> <%=user.username%> posts..</h2>
+    <hr>
+    <div class="grid">
+        <div class="grid-sizer"></div>
+        <% user.campgrounds.forEach(function(item){ %>
+        <div class="grid-item indexpage" >
+            <a  href="/campgrounds/<%=item._id%>" id="info"><img id="indeximg" src= "<%=item.image%>"></a>
+            <div class="box-text">
+                <a href="/campgrounds/<%=item._id%>"><h1 id="title-name"><%=item.name%></h1></a>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+
+
+
+<script>
+// external js: masonry.pkgd.js, imagesloaded.pkgd.js
+
+// init Masonry
+var grid = document.querySelector('.grid');
+
+var msnry = new Masonry( grid, {
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-sizer',
+  percentPosition: true,
+  gutter: 20
+});
+
+imagesLoaded( grid ).on( 'progress', function() {
+  // layout Masonry after each image loads
+  msnry.layout();
+});
+
+
+</script>
+<% include ./partials/footer %>
