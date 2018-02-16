@@ -42,15 +42,16 @@ router.post('/', middleware.isLoggedIn, function(req, res){
         };
   geocoder.geocode(req.body.location, function(err, data){
     
-    if(data.results[0] == null){
+  
+    var lat = req.body.lat;
+    var lng = req.body.lng;
+    if(isNaN(lat) || isNaN(lng)){
         req.flash("error","Something is wrong with your location ! Try to set latitude and longitude!")
         return res.redirect("back")
     }
-    var lat = data.results[0].geometry.location.lat;
-    var lng = data.results[0].geometry.location.lng;
     var cords = {lat: lat, lng:lng}
-    var location = data.results[0].formatted_address;
-    var newCampground = {name: name, image: image, description: desc, author:author, location: location, lat: lat, lng: lng, cords:cords};
+    // var location = data.results[0].formatted_address;
+    var newCampground = {name: name, image: image, description: desc, author:author, lat: lat, lng: lng, cords:cords};
     // Create a new campground and save to DB
     Camp.create(newCampground, function(err, camp){
         if(err){

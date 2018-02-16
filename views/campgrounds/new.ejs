@@ -33,16 +33,16 @@
                 <!--  </div>-->
                 <!--</div>-->
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="latitude(optional)" name='lat'>
+                    <input class="form-control" id="pac-lat" type="text" placeholder="latitude(optional)" name='lat'>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" placeholder="langitude(optional)" name='lng'>
+                    <input class="form-control" id="pac-lng" type="text" placeholder="langitude(optional)" name='lng'>
                 </div>
                 <div class="form-group">
                     <textarea class="form-control noresize" placeholder="Description..." rows=10 name='description'></textarea> 
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                    <button id ="submitNew" class="btn btn-lg btn-primary btn-block" disabled>Submit!</button>
                  </div>
                 <div class="form-group">
                      <a class="btn btn-s btn-primary text-center" href="/campgrounds" type="button">Go Back!</a>
@@ -70,11 +70,12 @@
           center: {lat: -33.8688, lng: 151.2195},
           zoom: 13
         });
+        var pos = {lat: -33.8688, lng: 151.2195}
         var card = document.getElementById('pac-card');
         var input = document.getElementById('pac-input');
         var types = document.getElementById('type-selector');
-        var strictBounds = document.getElementById('strict-bounds-selector');
-
+        
+        var clickHandler = new ClickEventHandler(map, pos); 
         map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
         var autocomplete = new google.maps.places.Autocomplete(input);
@@ -128,26 +129,38 @@
           infowindow.open(map, marker);
         });
 
-        // Sets a listener on a radio button to change the filter type on Places
-        // Autocomplete.
-        // function setupClickListener(id, types) {
-        //   var radioButton = document.getElementById(id);
-        //   radioButton.addEventListener('click', function() {
-        //     autocomplete.setTypes(types);
-        //   });
-        // }
-
-        // setupClickListener('changetype-all', []);
-        // setupClickListener('changetype-address', ['address']);
-        // setupClickListener('changetype-establishment', ['establishment']);
-        // setupClickListener('changetype-geocode', ['geocode']);
-
-        // document.getElementById('use-strict-bounds')
-        //     .addEventListener('click', function() {
-        //       console.log('Checkbox clicked! New state=' + this.checked);
-        //       autocomplete.setOptions({strictBounds: this.checked});
-        //     });
       }
+
+var ClickEventHandler = function(map, origin) {
+    this.origin = origin;
+    this.map = map;
+    this.directionsService = new google.maps.DirectionsService;
+    this.directionsDisplay = new google.maps.DirectionsRenderer;
+    this.directionsDisplay.setMap(map);
+    // Listen for clicks on the map.
+    this.map.addListener('click', this.handleClick.bind(this));
+    // this.calculateAndDisplayRoute();
+  };
+
+ClickEventHandler.prototype.handleClick = function(event) {
+    // console.log('You clicked on: ' + event.latLng);
+    
+      if($("#submitNew").attr("disabled", true)){
+          $("#submitNew").removeAttr("disabled");
+      }
+    var marker = new google.maps.Marker({
+        position: event.latLng,
+        map: this.map
+    });
+    var latLng = event.latLng;
+    $("#pac-lat").val(latLng.lat());
+    $("#pac-lng").val(latLng.lng());
+    
+  };
+
+
+
+
 
   function checkGeocode(){
       var addr = document.getElementById("pac-input");
