@@ -13,21 +13,21 @@ window.onload = randomBacground;
     
         function randomBacground(){
             var randomNumber = Math.floor(Math.random() * images.length);
-            var bgImg = 'url(' + images[randomNumber] + ')';
+            // var bgImg = 'url(' + images[randomNumber] + ')';
             $('.jumbotron').css('background-image', 'url('+images[randomNumber]+")");
     };
     
-    var i = 0;
+    // var i = 0;
     
-    function slideimg() {
-        setTimeout(function () {
-            $('.jumbotron').css('background-image', 'url('+images[i]+")");
-            i++;
-            if(i==images.length) i=0;
-            slideimg();
-        }, 5000);
-    }
+    // function slideimg() {
+    //     setTimeout(function () {
+    //         $('.jumbotron').css('background-image', 'url('+images[i]+")");
+    //         i++;
+    //         if(i==images.length) i=0;
+    //         slideimg();
+    //     }, 5000);
+    // }
     
-slideimg();
+// slideimg();
 
 </script>

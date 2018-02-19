@@ -100,7 +100,7 @@ a:hover{
 /*Jumbotron styling*/
 
 .jumbotron{
-  background-image: url("https://images.unsplash.com/photo-1507830075634-ce51e8b19328?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=1c87f7939c25a0ef26b2aa449b2aa380&auto=format&fit=crop&w=1350&q=80");
+  /*background-image: url("https://images.unsplash.com/photo-1507830075634-ce51e8b19328?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=1c87f7939c25a0ef26b2aa449b2aa380&auto=format&fit=crop&w=1350&q=80");*/
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -142,14 +142,12 @@ a:hover{
   background:transparent;
 }
 
-#navbarUser:hover{
-  color:rgb(58, 58, 58);
-  text-decoration: underline;
-
-}
 
 .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover{
-  color:rgb(58, 58, 58);
+  /*color:rgb(58, 58, 58);*/
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8),
+               0 2px 8px rgb(255,255,255);
 }
 
 .navbar-default .navbar-nav>li>a{
@@ -170,15 +168,20 @@ a:hover{
   border-bottom-left-radius: 60px;
   padding-left: 60px;
 }
-
-
-
-.navbar-default .navbar-nav>li:last-of-type:hover{
-  color:rgb(58, 58, 58);
-  text-decoration: underline;
+.navbar-default .navbar-nav>li>a:hover{
+  color: white;
 }
 
 
+.navbar-default .navbar-nav>li:last-of-type:hover{
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8),
+               0 2px 8px rgb(255,255,255);
+}
+
+.navbar-default .navbar-nav>li:first-of-type:hover{
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8),
+               0 2px 8px rgb(255,255,255);
+}
 
 /*Alerts*/
 div[role="alert"]{

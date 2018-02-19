@@ -206,7 +206,10 @@ body{
   font-weight: 600;
 }
 .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover{
-  color:rgb(58, 58, 58);
+  /*color:rgb(58, 58, 58);*/
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8),
+               0 2px 8px rgb(255,255,255);
 }
 
 #navbarUser{
@@ -214,11 +217,6 @@ body{
   border:1px solid rgba(0,0,0,0);
   line-height: 46px;
   background:transparent;
-}
-
-#navbarUser:hover{
-  color:rgb(58, 58, 58);
-  text-decoration: underline;
 }
 
 .navbar-default .navbar-nav>li>a{
@@ -240,13 +238,18 @@ body{
    padding-left: 60px;
 }
 
-
-
-.navbar-default .navbar-nav>li:last-of-type:hover{
-  color:rgb(58, 58, 58);
-  text-decoration: underline;
+.navbar-default .navbar-nav>li>a:hover{
+  color: white;
 }
 
+.navbar-default .navbar-nav>li:last-of-type:hover{
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8),
+               0 2px 8px rgb(255,255,255);
+}
+.navbar-default .navbar-nav>li:first-of-type:hover{
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8),
+               0 2px 8px rgb(255,255,255);
+}
 
 div[role="alert"]{
   margin-top: 40px;
