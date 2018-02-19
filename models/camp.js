@@ -20,7 +20,7 @@ var campSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    // location: String,
+    location: String,
     lat: Number,
     lng: Number,
     cords:[

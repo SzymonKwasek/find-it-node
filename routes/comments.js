@@ -23,18 +23,19 @@ router.post("/", middleware.isLoggedIn, function(req, res){
             }else{
                  Comment.create(req.body.comment, function(err, comment){
                      if(err){
-                         req.flash("error", "Something went wrong!")
+                         req.flash("error", "Something went wrong!");
                          console.log(err);
                      }else{
                          comment.author.id = req.user._id;
                          comment.author.username = req.user.username;
                         //  comment.edited = false;
+                        console.log(comment);
                          comment.save();
                          camp.comments.push(comment._id);
                          camp.save(function(err){
                              console.log("comment has been added");
                          });
-                         req.flash("success", "Comment has been created succesfully!")
+                         req.flash("success", "Comment has been created succesfully!");
                          res.redirect("/campgrounds/"+camp._id);
                      }
                  });
@@ -53,8 +54,8 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, 
 
 // UPDATE
 router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
-            Comment.findByIdAndUpdate(req.params.comment_id, {content: req.body.content, edited : true},  function(err, comment){
-                    req.flash("success", "Comment has been edited succesfully!")
+            Comment.findByIdAndUpdate(req.params.comment_id, {content: req.body.comment.content, edited : true},  function(err, comment){
+                    req.flash("success", "Comment has been edited succesfully!");
                     res.redirect("/campgrounds/"+req.params.id);
     });
 });

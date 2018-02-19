@@ -46,10 +46,11 @@ router.post('/', middleware.isLoggedIn, function(req, res){
     var lat = req.body.lat;
     var lng = req.body.lng;
     if(isNaN(lat) || isNaN(lng)){
-        req.flash("error","Something is wrong with your location ! Try to set latitude and longitude!")
-        return res.redirect("back")
+        req.flash("error","Something is wrong with your location ! Try to set latitude and longitude!");
+        // console.log(lat + " " + name + " " + image + " " + desc)
+        return res.redirect("back");
     }
-    var cords = {lat: lat, lng:lng}
+    var cords = {lat: lat, lng:lng};
     // var location = data.results[0].formatted_address;
     var newCampground = {name: name, image: image, description: desc, author:author, lat: lat, lng: lng, cords:cords};
     // Create a new campground and save to DB
@@ -128,16 +129,16 @@ router.post("/:id/coordinates", middleware.isLoggedIn, function(req, res){
                 console.log(err);
             }else{
                  var lat = req.body.coordinates.slice(1,18);
-                 var lng = req.body.coordinates.slice(20,36)
+                 var lng = req.body.coordinates.slice(20,36);
                  var authorOfMark = req.user.username;
-                 var loc = {lat: lat, lng: lng, authorOfMark: authorOfMark}
+                 var loc = {lat: lat, lng: lng, authorOfMark: authorOfMark};
                 //  console.log("Clicked")
                 //  console.log(lat+" "+lng)
-                camp.cords.push(loc)
+                camp.cords.push(loc);
                 camp.save();
                 res.redirect("/campgrounds/"+req.params.id);
             }
-        })
+        });
 });
 
 
