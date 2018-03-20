@@ -40,18 +40,16 @@ router.post('/', middleware.isLoggedIn, function(req, res){
         id: req.user._id,
         username: req.user.username
         };
-  geocoder.geocode(req.body.location, function(err, data){
+    geocoder.geocode(req.body.location, function(err, data){
     
   
     var lat = req.body.lat;
     var lng = req.body.lng;
     if(isNaN(lat) || isNaN(lng)){
         req.flash("error","Something is wrong with your location ! Try to set latitude and longitude!");
-        // console.log(lat + " " + name + " " + image + " " + desc)
         return res.redirect("back");
     }
     var cords = {lat: lat, lng:lng};
-    // var location = data.results[0].formatted_address;
     var newCampground = {name: name, image: image, description: desc, author:author, lat: lat, lng: lng, cords:cords};
     // Create a new campground and save to DB
     Camp.create(newCampground, function(err, camp){
@@ -108,15 +106,17 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
 // UPDATE
 router.put("/:id", middleware.checkCampgroundOwnership, function(req, res){
     geocoder.geocode(req.body.camp.location, function (err, data) {
-    if(data.results[0] == null){
+    var lat = req.body.camp.lat;
+    var lng = req.body.camp.lng;
+    if(isNaN(lat) || isNaN(lng)){
         req.flash("error","Something is wrong with your location ! Try to set latitude and longitude!");
         return res.redirect("back");
     }
-    var lat = data.results[0].geometry.location.lat;
-    var lng = data.results[0].geometry.location.lng;
-    var location = data.results[0].formatted_address;
-    var newData = {name: req.body.camp.name, image: req.body.image, description: req.body.description, cost: req.body.cost, location: location, lat: lat, lng: lng};
-    Camp.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, data){
+    var cords = {lat: lat, lng: lng};
+    var newData = {name: req.body.camp.name, image: req.body.camp.image, description: req.body.camp.description, location: cords, lat: lat, lng: lng};
+    Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, data){
+        console.log(newData);
+            req.flash("success", "Campground has been edited succesfully!");
             res.redirect("/campgrounds/"+req.params.id);
     });
   });

@@ -12,40 +12,21 @@
                         <input class="form-control" type="text" value="<%=camp.name%>" name='camp[name]'>
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" value="<%=camp.image%>" name='image'>
+                        <input class="form-control" type="text" value="<%=camp.image%>" name='camp[image]'>
                     </div>
-                    <!-- <div class="form-group">-->
-                    <!--    <input class="form-control" type="text" value="<%=camp.location%>" name='camp[location]'>-->
-                    <!--</div>-->
+
                     <div  class= "form-group" id="pac-container">
                         <input class= "form-control" id="pac-input" type="text"  placeholder="Enter a location" name='camp[location]'>
                     </div>
                     <div>
-                        <div id="type-selector" class="pac-controls">
-                          <input type="radio" name="type" id="changetype-all" checked="checked">
-                          <label for="changetype-all">All</label>
-                
-                          <input type="radio" name="type" id="changetype-establishment">
-                          <label for="changetype-establishment">Establishments</label>
-                
-                          <input type="radio" name="type" id="changetype-address">
-                          <label for="changetype-address">Addresses</label>
-                
-                          <input type="radio" name="type" id="changetype-geocode">
-                          <label for="changetype-geocode">Geocodes</label>
-                        </div>
-                        <div id="strict-bounds-selector" class="pac-controls">
-                          <input type="checkbox" id="use-strict-bounds" value="">
-                          <label for="use-strict-bounds">Strict Bounds</label>
+                        <div class="form-group">
+                            <input class="form-control" id="pac-lat" type="text" value="<%=camp.lat%>" name='camp[lat]'>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="text" value="<%=camp.lat%>" name='camp[lat]'>
+                            <input class="form-control" id="pac-lng" type="text" value="<%=camp.lng%>" name='camp[lng]'>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="text" value="<%=camp.lng%>" name='camp[lng]'>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control noresize" rows=10 name='description'><%=camp.description%></textarea> 
+                            <textarea class="form-control noresize" rows=10 name='camp[description]'><%=camp.description%></textarea> 
                         </div>
                         <div class="form-group">
                             <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit!">
@@ -73,13 +54,14 @@
           center: {lat: lat, lng: lng},
           zoom: 13
         });
+        var pos = {lat: lat, lng: lng}
         var card = document.getElementById('pac-card');
         var input = document.getElementById('pac-input');
         var types = document.getElementById('type-selector');
-        var strictBounds = document.getElementById('strict-bounds-selector');
-
+        
+        var clickHandler = new ClickEventHandler(map, pos); 
         map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-
+        
         var autocomplete = new google.maps.places.Autocomplete(input);
 
         // Bind the map's bounds (viewport) property to the autocomplete object,
@@ -131,28 +113,38 @@
           infowindow.open(map, marker);
         });
 
-        // Sets a listener on a radio button to change the filter type on Places
-        // Autocomplete.
-        function setupClickListener(id, types) {
-          var radioButton = document.getElementById(id);
-          radioButton.addEventListener('click', function() {
-            autocomplete.setTypes(types);
-          });
-        }
 
-        setupClickListener('changetype-all', []);
-        setupClickListener('changetype-address', ['address']);
-        setupClickListener('changetype-establishment', ['establishment']);
-        setupClickListener('changetype-geocode', ['geocode']);
 
-        document.getElementById('use-strict-bounds')
-            .addEventListener('click', function() {
-              console.log('Checkbox clicked! New state=' + this.checked);
-              autocomplete.setOptions({strictBounds: this.checked});
-            });
       }
       
       
+      var ClickEventHandler = function(map, origin) {
+    this.origin = origin;
+    this.map = map;
+    this.directionsService = new google.maps.DirectionsService;
+    this.directionsDisplay = new google.maps.DirectionsRenderer;
+    this.directionsDisplay.setMap(map);
+    // Listen for clicks on the map.
+    this.map.addListener('click', this.handleClick.bind(this));
+    // this.calculateAndDisplayRoute();
+      };
+    
+    ClickEventHandler.prototype.handleClick = function(event) {
+        // console.log('You clicked on: ' + event.latLng);
+        
+          if($("#submitNew").attr("disabled", true)){
+              $("#submitNew").removeAttr("disabled");
+          }
+        var marker = new google.maps.Marker({
+            position: event.latLng,
+            map: this.map
+        });
+        var latLng = event.latLng;
+        $("#pac-lat").val(latLng.lat());
+        $("#pac-lng").val(latLng.lng());
+        
+      };
+
       
 
 
