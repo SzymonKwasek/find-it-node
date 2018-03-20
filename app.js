@@ -3,8 +3,6 @@ var express = require("express"),
     mongoose = require("mongoose"),
     bodyParser = require("body-parser"),
     User = require("./models/user"),
-    seedDB = require("./seeds"),
-    geocoder = require("geocoder"),
     passport =  require("passport"),
     localStrategy = require("passport-local"),
     flash = require("connect-flash"),
@@ -37,7 +35,7 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// put currentUser in every route
+// put variables in every route
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
     res.locals.error = req.flash("error")
@@ -45,8 +43,7 @@ app.use(function(req, res, next){
     next();
 });
 
-// seedDB(); seed the database
-
+// Shortcuts that helps in routes.
 app.use("/campgrounds", campgroundRoute);
 app.use("/campgrounds/:id/comments", commentRoute);
 app.use("/", indexRoute);
